@@ -327,12 +327,15 @@ iptables -t nat -A POSTROUTING -s 10.16.0.0/21 -o eth0 -j SNAT --to-source 192.1
 
 #### Pada **Strix**
 
+![image](https://user-images.githubusercontent.com/99629909/206752974-7688c95f-1a8a-43ae-84bd-0520f4e6c937.png)
 
 #### Pada **Westalis**
 
+![image](https://user-images.githubusercontent.com/99629909/206752893-d8609b09-57c4-496a-9cac-01489b54669a.png)
 
 #### Pada **WISE**
 
+![image](https://user-images.githubusercontent.com/99629909/206753130-af885f40-f5c4-4958-a0a9-155431fc1d44.png)
 
 #### Pada **Briar**
 
