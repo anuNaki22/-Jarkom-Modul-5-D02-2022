@@ -356,6 +356,7 @@ iptables di atas akan melalukan drop pada semua TCP dan UDP dengan tujuan **WISE
 
 #### Ping google.com pada WISE setelah iptables
 
+![image](https://user-images.githubusercontent.com/99629909/206753819-4af54578-e930-4953-a2d2-01679aca1b83.png)
 
 #### Netcat **WISE** dengan **Strix** menggunakan port 18
 
