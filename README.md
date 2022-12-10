@@ -490,10 +490,15 @@ iptables -A LOGGING -j LOG --log-prefix "IPTables-Rejected: "
 iptables -A LOGGING -j REJECT
 service rsyslog restart
 ```
-Setelah selesai semua testing hasilnya
+
 Hasil Testing 
 
+![image](https://user-images.githubusercontent.com/99629909/206854592-e88e126b-9173-4d21-9cfd-b1ddd22f01c5.png)
 
-## Kesulitan
+log dapat dicek pada path `/var/log/syslog`
+
+![image](https://user-images.githubusercontent.com/99629909/206854549-cc53d476-2215-46a9-ab55-6ed9c9dc27e7.png)
+
+## Kendala
 1. Lupa melakukan setting resolv.conf di semua node sehingga ada node yang tidak bisa terhubung internet dan tidak bisa melakukan instalasi kebutuhan soal
-2. pada testing soal nomor 5 sempat mengalami request failed
+2. pada testing soal nomor 5 sempat mengalami request failed karena sempat mengubah date ke waktu di luar jam kerja dan belum dikembalikan ke waktu jam kerja
