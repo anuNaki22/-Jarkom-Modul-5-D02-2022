@@ -416,6 +416,16 @@ iptables -A PREROUTING -t nat -p tcp --dport 443 -d 10.16.0.26 -m statistic --mo
 iptables -A PREROUTING -t nat -p tcp --dport 443 -d 10.16.0.26 -j DNAT --to-destination 10.16.0.27:80
 ```
 
+Hasil Testing
+- Request ke Garden
+
+![image](https://user-images.githubusercontent.com/99629909/206851095-fdd122b9-2936-4738-ad2c-0a6e47a215f2.png)
+
+- Request ke SSS
+
+![image](https://user-images.githubusercontent.com/99629909/206851128-a98177bd-ab06-435f-85c4-cc5e8a8ced7c.png)
+
+
 ## (6) Logging paket yang di-drop dengan standard syslog level
 
 **Pada Wise** restart terlebih dahulu DHCP nya dengan:
@@ -447,4 +457,4 @@ Hasil Testing
 
 ## Kesulitan
 1. Lupa melakukan setting resolv.conf di semua node sehingga ada node yang tidak bisa terhubung internet dan tidak bisa melakukan instalasi kebutuhan soal
-2. pada testing soal nomor 5 mengalami request failed
+2. pada testing soal nomor 5 sempat mengalami request failed
