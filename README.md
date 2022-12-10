@@ -1,7 +1,7 @@
 # Jarkom-Modul-5-D02-2022
 
 ## Anggota Kelompok D02
-| NRP | Nama | Kontribusi |
+| NRP | Nama |
 | :---:        |     :---:           |
 | 5025201082   | Farrel Emerson      | 
 | 5025201087   | Daniel Hermawan     |      
@@ -370,7 +370,7 @@ iptables di atas akan melalukan drop pada semua TCP dan UDP dengan tujuan **WISE
 
 ## (3) Membatasi DHCP dan DNS Server hanya boleh menerima maksimal 2 koneksi ICMP secara bersamaan
 
-Limit koneksi ICMP dengan iptables pada **WISE** sebagai DHCP Server dan **Eden** sebagai DNS Server
+Limit koneksi ICMP dengan iptables pada **WISE** sebagai DHCP Server dan **Eden** sebagai DNS Server. Karena koneksinya ICMP maka akan digunakan flag `-p` dengan nilai `icmp`. Selain, itu akan digunakan limit maksimal 2 untuk akses koneksi secara bersamaan sehingga dapat menggunakan `--connlimit-above 2` dan menambahkan target `DROP` agar koneksi lainnya selain 2 koneksi tersebut ditolak.
 
 ```
 iptables -A INPUT -p icmp -m connlimit --connlimit-above 2 --connlimit-mask 0 -j DROP
@@ -387,7 +387,7 @@ iptables -A INPUT -p icmp -m connlimit --connlimit-above 2 --connlimit-mask 0 -j
 
 ## (4) Akses menuju Web Server hanya diperbolehkan disaat jam kerja yaitu Senin sampai Jumat pada pukul 07.00 - 16.00
 
-Pada **Garden** dan **SSS** sebagai Web Server, dibuat firewall sebagai berikut
+Pada **Garden** dan **SSS** sebagai Web Server, dibuat firewall. Karena dibatasi waktu tertentu maka kita batasi menggunakan `-m time` dengan `--timestart` sebagai waktu mulai dapat diakses bernilai `07.00` dan `--timestop` sebagai waktu akhir dapat diakses bernilai `16.00`, serta membatasi hari berlaku dengan `--weekdays` untuk hari Senin hingga Jumat. Terdapat flag `-j` yang menentukan kapan akses akan di `ACCEPT` atau `REJECT`.
 
 ```
 iptables -A INPUT -m time --timestart 07:00 --timestop 16:00 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
@@ -407,18 +407,44 @@ Ping **Garden** (10.16.0.27) pada hari libur
 
 ## (5) Setiap request dari client yang mengakses Garden dengan port 80 akan didistribusikan secara bergantian pada SSS dan Garden secara berurutan dan request dari client yang mengakses SSS dengan port 443 akan didistribusikan secara bergantian pada Garden dan SSS secara berurutan
 
-Pada **Ostania** dilakukan konfigurasi iptables sebagai berikut
+Karena diminta untuk setiap request akan didistribusikan secara bergantian antara Garden dan SSS, maka akan dikonfigurasi untuk masing-masing node dengan port untuk request masing-masing node adalah 80 dan 443 dengan menggunakan `--dport`. Selain itu, akan dibatasi secara bergantian dengan menggunakan `--every 2` sehingga akan bergantian terdistribusinya dengan mengarahkan ke node lain dengan menggunakan `--to-destination`. Pada **Ostania** dilakukan konfigurasi iptables sebagai berikut:
 
 ```
-iptables -t nat -A PREROUTING -p tcp -d 10.16.0.27 --dport 80 -m statistic --mode nth --every 2 --packet 0 -j DNAT --to-destination 10.16.0.26:80
-iptables -t nat -A PREROUTING -p tcp -d 10.16.0.26 --dport 443 -m statistic --mode nth --every 2 --packet 0 -j DNAT --to-destination 10.16.0.27:443
+iptables -A PREROUTING -t nat -p tcp --dport 80 -d 10.16.0.27 -m statistic --mode nth --every 2 --packet 0 -j DNAT --to-destination 10.16.0.27:80
+iptables -A PREROUTING -t nat -p tcp --dport 80 -d 10.16.0.27 -j DNAT --to-destination 10.16.0.26:80
+iptables -A PREROUTING -t nat -p tcp --dport 443 -d 10.16.0.26 -m statistic --mode nth --every 2 --packet 0 -j DNAT --to-destination 10.16.0.26:443
+iptables -A PREROUTING -t nat -p tcp --dport 443 -d 10.16.0.26 -j DNAT --to-destination 10.16.0.27:80
 ```
 
 ## (6) Logging paket yang di-drop dengan standard syslog level
 
+**Pada Wise** restart terlebih dahulu DHCP nya dengan:
+```
+service isc-dhcp-server restart
+service isc-dhcp-server restart
+```
+kemudian isikan sylog syntax pada wise untuk melihat paket yang di drop .
 ```
 iptables -N LOGGING
-iptables -A INPUT -j LOGGING
-iptables -A LOGGING -j LOG --log-prefix "IPTables-Dropped: " --log-level 4
+iptables -A INPUT -p icmp -m connlimit --connlimit-above 2 --connlimit-mask 0 -j LOGGING
+iptables -A LOGGING -j LOG --log-prefix "IPTables-Dropped: "
 iptables -A LOGGING -j DROP
 ```
+kemudian isikan sylog pada semua node
+```
+service apache2 restart
+service apache2 restart
+iptables -A INPUT -m time --timestart 07:00 --timestop 16:00 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+iptables -N LOGGING
+iptables -A INPUT -j LOGGING
+iptables -A LOGGING -j LOG --log-prefix "IPTables-Rejected: "
+iptables -A LOGGING -j REJECT
+service rsyslog restart
+```
+Setelah selesai semua testing hasilnya
+Hasil Testing 
+
+
+## Kesulitan
+1. Lupa melakukan setting resolv.conf di semua node sehingga ada node yang tidak bisa terhubung internet dan tidak bisa melakukan instalasi kebutuhan soal
+2. pada testing soal nomor 5 mengalami request failed
