@@ -169,7 +169,7 @@ route add -net 0.0.0.0 netmask 0.0.0.0 gw 10.16.0.5
 ## IP Tables Strix
 Pada router Strix jalankan perintah berikut ini (belum menjawab soal 1):
 ```
-  iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE -s 192.189.0.0/21
+  iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE -s 10.16.0.0/21
 ```
 
 ## Setting resolv.conf
