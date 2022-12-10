@@ -2,10 +2,10 @@
 
 ## Anggota Kelompok D02
 | NRP | Nama | Kontribusi |
-| :---:        |     :---:           | :---: |
-| 5025201082   | Farrel Emerson      |      |
-| 5025201087   | Daniel Hermawan     |      |
-| 5025201003   | Rahmat Faris Akbar  |     | 
+| :---:        |     :---:           |
+| 5025201082   | Farrel Emerson      | 
+| 5025201087   | Daniel Hermawan     |      
+| 5025201003   | Rahmat Faris Akbar  |     
 
 # Soal dan Jawaban
 
@@ -305,14 +305,19 @@ Setelah itu restart bind9 dengan `service bind9 restart`
 
 #### Forger
 
+![image](https://user-images.githubusercontent.com/99629909/206826202-84960915-c58b-4c57-9ab4-2e1339502744.png)
 
 #### Desmond
 
+![image](https://user-images.githubusercontent.com/99629909/206826225-144e2eb7-e3a2-409a-86c6-e801a959789b.png)
 
 #### Briar
 
+![image](https://user-images.githubusercontent.com/99629909/206826241-b916fca1-c09e-4363-a2e8-e5c4935ef0d4.png)
 
 #### Blackbell
+
+![image](https://user-images.githubusercontent.com/99629909/206826260-3b462a6f-ba48-4dac-ad53-b289129e061c.png)
 
 
 ## (1) iptables pada **Strix** tanpa `MASQUERADE`
@@ -327,18 +332,19 @@ iptables -t nat -A POSTROUTING -s 10.16.0.0/21 -o eth0 -j SNAT --to-source 192.1
 
 #### Pada **Strix**
 
-![image](https://user-images.githubusercontent.com/99629909/206752974-7688c95f-1a8a-43ae-84bd-0520f4e6c937.png)
+![image](https://user-images.githubusercontent.com/99629909/206837688-e61f04fc-67bb-4c9f-95ee-8058badfe2a4.png)
 
 #### Pada **Westalis**
 
-![image](https://user-images.githubusercontent.com/99629909/206752893-d8609b09-57c4-496a-9cac-01489b54669a.png)
+![image](https://user-images.githubusercontent.com/99629909/206837713-8e1ab04a-ec8d-4785-8d1d-d4e441c91960.png)
 
 #### Pada **WISE**
 
-![image](https://user-images.githubusercontent.com/99629909/206753130-af885f40-f5c4-4958-a0a9-155431fc1d44.png)
+![image](https://user-images.githubusercontent.com/99629909/206837731-8722461c-114c-4a38-9b72-8a0da4567973.png)
 
 #### Pada **Briar**
 
+![image](https://user-images.githubusercontent.com/99629909/206837772-cd4ef484-f047-473c-a52b-dbd13cae00ed.png)
 
 
 ## (2) Drop semua TCP dan UDP pada DHCP Server
@@ -372,8 +378,11 @@ iptables -A INPUT -p icmp -m connlimit --connlimit-above 2 --connlimit-mask 0 -j
 
 ### Testing ping Eden (10.16.0.18) sebagai DNS Server dengan 3 client
 
+![image](https://user-images.githubusercontent.com/99629909/206838101-61428279-d9c1-47db-9caf-e0b5046b6c49.png)
 
+![image](https://user-images.githubusercontent.com/99629909/206838091-6d4db5a1-2c5a-4851-8238-4c7a3899e762.png)
 
+![image](https://user-images.githubusercontent.com/99629909/206838086-f75ab1c2-740a-4af9-8bd7-50aa18a62a41.png)
 
 
 ## (4) Akses menuju Web Server hanya diperbolehkan disaat jam kerja yaitu Senin sampai Jumat pada pukul 07.00 - 16.00
@@ -389,8 +398,11 @@ iptables -A INPUT -j REJECT
 
 Ping **Garden** (10.16.0.27) pada jam kerja
 
+![image](https://user-images.githubusercontent.com/99629909/206838298-ed459b18-66a5-4cbd-b5e1-a9d7ccf14071.png)
 
 Ping **Garden** (10.16.0.27) pada hari libur
+
+![image](https://user-images.githubusercontent.com/99629909/206838351-1b73a199-81d2-473a-ad54-aeb294dd7c29.png)
 
 
 ## (5) Setiap request dari client yang mengakses Garden dengan port 80 akan didistribusikan secara bergantian pada SSS dan Garden secara berurutan dan request dari client yang mengakses SSS dengan port 443 akan didistribusikan secara bergantian pada Garden dan SSS secara berurutan
