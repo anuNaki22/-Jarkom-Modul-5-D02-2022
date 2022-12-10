@@ -301,6 +301,45 @@ options {
 
 Setelah itu restart bind9 dengan `service bind9 restart`
 
+### Web Server
+Node yang berperan sebagai Web Server yaitu Garden dan SSS akan menambahkan konfigurasi pada file-file sebagai berikut.
+
+- `.bashrc`
+  ```shell
+  echo nameserver 192.168.122.1 > /etc/resolv.conf
+  apt-get update
+  apt-get install apache2 -y
+  ```
+ 
+- `/var/www/html/index.html`
+  ```shell
+  # Garden
+  Garden
+  
+  # SSS
+  SSS
+  ```
+  
+- `/etc/apache2/ports.conf`
+  ```shell
+  # If you just change the port or add more ports here, you will likely also
+  # have to change the VirtualHost statement in
+  # /etc/apache2/sites-enabled/000-default.conf
+
+  Listen 80
+  Listen 443
+
+  <IfModule ssl_module>
+          Listen 443
+  </IfModule>
+
+  <IfModule mod_gnutls.c>
+          Listen 443
+  </IfModule>
+
+  # vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+  ```
+  
 ### Testing
 
 #### Forger
